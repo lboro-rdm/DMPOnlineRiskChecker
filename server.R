@@ -1,3 +1,4 @@
+# Server
 server <- function(input, output, session) {
   
   special_terms <- c(
@@ -7,7 +8,7 @@ server <- function(input, output, session) {
     "denomination", "disability", "disability status", 
     "ethnicity", "faith", "financial information", 
     "gender", "gender expression", "gender identity", 
-    "illness", "indigenous", "LGBTQ+", 
+    "illness", "indigenous", "lgbtq+", 
     "medical", "mental health", "mental illness", 
     "non-binary", "personal data", "personal information", 
     "personal opinions", "party membership", "political affiliation", 
@@ -27,49 +28,55 @@ server <- function(input, output, session) {
     json_data <- fromJSON(input$jsonfile$datapath, simplifyVector = TRUE)
     
     # Initialize a data frame to store matches
-    matches <- data.frame(id = character(), principal_investigator_email = character(), content = character(), stringsAsFactors = FALSE)
+    matches <- data.frame(id = character(), data_contact_email = character(), content = character(), stringsAsFactors = FALSE)
     
-    # Check if json_data is a list and iterate through each data management plan
+    # Check if json_data is a list and iterate through each management plan
     if (is.list(json_data)) {
       for (plan in json_data) {
         # Get the ID safely
         plan_id <- if ("id" %in% names(plan)) as.character(plan$id) else NA
         
-        # Skip processing if the ID is NA
-        if (is.na(plan_id)) {
-          next  # Skip this plan if there is no ID
-        }
-        
-        # Get the principal investigator email safely
-        pi_email <- NA  # Initialize as NA
-        if ("principal_investigator" %in% names(plan)) {
-          if ("email" %in% names(plan$principal_investigator)) {
-            pi_email <- plan$principal_investigator$email
+        # Get the data contact email safely
+        data_contact_email <- NA  # Initialize as NA
+        if ("data_contact" %in% names(plan)) {
+          if ("email" %in% names(plan$data_contact)) {
+            data_contact_email <- plan$data_contact$email
           }
         }
         
         # Check each content element for special category data
-        for (field_name in names(plan)) {
-          content <- plan[[field_name]]  # Access each field's content
-          
-          # Ensure content is not NULL
-          if (!is.null(content)) {
-            # Check if the content is a character vector or a list
-            if (is.character(content) || is.list(content)) {
-              # Unlist if it's a list to check for special terms
-              if (is.list(content)) {
-                content <- unlist(content)
+        if ("plan_content" %in% names(plan)) {
+          for (content in plan$plan_content) {
+            if ("sections" %in% names(content)) {
+              for (section in content$sections) {
+                if ("questions" %in% names(section)) {
+                  for (question in section$questions) {
+                    # Check if the question has an answer
+                    if ("answer" %in% names(question) && "text" %in% names(question$answer)) {
+                      answer_text <- question$answer$text
+                      
+                      # Clean the answer text by removing HTML tags and decoding
+                      clean_text <- gsub("<[^>]+>", "", answer_text)  # Remove HTML tags
+                      clean_text <- gsub("&nbsp;", " ", clean_text)   # Replace non-breaking spaces
+                      
+                      # Print cleaned answer text for debugging
+                      cat(sprintf("Checking answer text: %s\n", clean_text))  # Debug output
+                      
+                      # Check for matches against special terms
+                      match_found <- any(str_detect(tolower(clean_text), str_c(special_terms, collapse = "|")))
+                      
+                      # Print matching result for debugging
+                      if (match_found) {
+                        cat(sprintf("Match found in plan ID: %s, content: %s\n", plan_id, clean_text))  # Debug output
+                        
+                        # If a match is found, append it to the matches data frame
+                        matches <- rbind(matches, data.frame(id = plan_id, data_contact_email = data_contact_email, content = clean_text, stringsAsFactors = FALSE))
+                      }
+                    }
+                  }
+                }
               }
-              # Use any() to check if any content matches the special terms
-              if (any(str_detect(tolower(as.character(content)), str_c(special_terms, collapse = "|")))) {
-                # If a match is found, append it to the matches data frame
-                matches <- rbind(matches, data.frame(id = plan_id, principal_investigator_email = pi_email, content = as.character(content), stringsAsFactors = FALSE))
-              }
-            } else {
-              cat(sprintf("Content for field '%s' is not a character or list: %s\n", field_name, class(content)))  # Debug output
             }
-          } else {
-            cat(sprintf("Content for field '%s' is NULL in plan ID: %s\n", field_name, plan_id))  # Debug output
           }
         }
       }
