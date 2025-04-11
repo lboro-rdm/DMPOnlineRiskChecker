@@ -52,9 +52,9 @@ ui <- tags$html(
     ),
   
     div(class = "main-wrapper",
-    p("This webapp checks Data Management Plans (DPMs) created on DMPOnline for projects that are processing personal and special category data."),
+    p("This web app checks data management plans (DMPs) created on DMPOnline for projects that process personal and special category data."),
     p(),
-    p("To use this app, you would need to use the DMPOnline API to create a .json file of DMPs that you would like to check."),
+    p("To use this app, you need to use the DMPOnline API to create a .json file of DMPs you would like to check."),
     p(),
     p(
       "More information is available for the ",
@@ -62,8 +62,7 @@ ui <- tags$html(
         href = "https://github.com/DMPRoadmap/roadmap/wiki/API-V0-Documentation#plans",
         target = "_blank",
         "DMPOnline API"
-      ),
-      "."
+      )
     ),
     p(),
     p(
@@ -72,8 +71,7 @@ ui <- tags$html(
         href = "https://www.postman.com/",
         target = "_blank",
         "Postman"
-      ),
-      "."
+      )
     ),
     p("To start using this app, upload your .json file."),
     p(),
@@ -86,7 +84,7 @@ ui <- tags$html(
   p("activism, ancestry, biometric data, belief, chronic illness, cisgender, confidential data, condition, data breaches, data protection, denomination, disability, disability status, ethnicity, faith, financial information, gender, gender expression, gender identity, illness, indigenous, LGBTQ+, medical, mental health, mental illness, non-binary, personal data, personal information, personal opinions, party membership, political affiliation, political beliefs, political opinion, private information, religion, religious affiliation, religious practices, sect, sexual orientation, sexual preference, spirituality, surveillance, symptoms, treatment, vaccination, voting behavior, and user consent."),
   p(),
   
-  p("This web app was created and is maintained by Lara Skelly, Loughborough University, in R using the following packages:"),
+  p("The idea behind this webapp came from Bogdan Metes, Newcastle University. This web app was created and is maintained by Lara Skelly, Loughborough University, in R using the following packages:"),
   tags$ul(
     tags$li(
       HTML("Chang W, Cheng J, Allaire J, Sievert C, Schloerke B, Xie Y, Allen J, McPherson J, Dipert A, Borges B (2024). <i>shiny: Web Application Framework for R</i>. R package version 1.10.0, "),
@@ -113,7 +111,7 @@ ui <- tags$html(
 
   p("Throughout the creation of this Shiny app, ChatGPT acted as a conversation partner and a code checker."),
   p(),
-  p("This web app does not use cookies or store any data on your device. Nor does it store anything uploaded. If you have any privacy concerns, please download the code and run it offline."),
+  p("This web app does not use cookies or store any data on your device. Nor does it store anything uploaded. If you have any privacy concerns, please download and run the code offline."),
   p(),
     ),
 
