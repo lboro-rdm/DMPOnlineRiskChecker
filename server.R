@@ -25,7 +25,8 @@ server <- function(input, output, session) {
     req(input$jsonfile)
     
     # Load JSON data
-    json_data <- fromJSON(input$jsonfile$datapath, simplifyVector = TRUE)
+    json_data <- fromJSON(input$jsonfile$datapath, simplifyVector = FALSE)
+    str(json_data, max.level = 2)
     
     # Initialize a data frame to store matches
     matches <- data.frame(id = character(), data_contact_email = character(), content = character(), stringsAsFactors = FALSE)
