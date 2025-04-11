@@ -113,7 +113,7 @@ ui <- tags$html(
 
   p("Throughout the creation of this Shiny app, ChatGPT acted as a conversation partner and a code checker."),
   p(),
-  p("This webapp does not use cookies or store any data on your device. Nor does it store anything uploaded. If you have any privacy concerns, please download the code and run it offline."),
+  p("This web app does not use cookies or store any data on your device. Nor does it store anything uploaded. If you have any privacy concerns, please download the code and run it offline."),
   p(),
     ),
 
